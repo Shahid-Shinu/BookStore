@@ -1,17 +1,37 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TextInput, rem, Fieldset, PasswordInput, Button } from '@mantine/core'
 import { IconAt, IconLock } from '@tabler/icons-react';
 import Link from 'next/link'
+import { useDisclosure } from '@mantine/hooks';
 
-const Login = () => {
+const SignUp = () => {
   const AtIcon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
   const LockIcon = <IconLock style={{ width: rem(16), height: rem(16) }} />;
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [visible, { toggle }] = useDisclosure(false)
+  const [error, setError] = useState('')
+
+  // useEffect(() => {
+  //   if(password !== confirmPassword){
+  //     setError("Passwords doesn't match")
+  //   }
+  //   else{
+  //     setError('')
+  //   }
+  // }, [password, confirmPassword])
 
   function onSubmit() {
     console.log(userName, password)
+    if(password !== confirmPassword){
+      setError("Passwords doesn't match")
+    }
+    else{
+      setError('')
+    }
+    
   }
 
   return (
@@ -31,6 +51,19 @@ const Login = () => {
         placeholder="Enter Password" 
         value={password}
         onChange={(event) => setPassword(event.currentTarget.value)}
+        visible={visible}
+        onVisibilityChange={toggle}
+        error={error}
+      />
+      <PasswordInput 
+        leftSection={LockIcon} 
+        label="Confirm Password" 
+        placeholder="Enter Password" 
+        value={confirmPassword}
+        onChange={(event) => setConfirmPassword(event.currentTarget.value)}
+        visible={visible}
+        onVisibilityChange={toggle}
+        error={error}
       />
       <Button className='bg-indigo-500' onClick={onSubmit}>Submit</Button>
     <span>Don't have an account? <Link className='text-blue-500 underline' href='/signup'>signup</Link></span>
@@ -39,4 +72,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default SignUp
