@@ -19,6 +19,7 @@ interface BooksInterface {
   items: any[];
   kind: string;
   totalItems: number;
+  maxResults: number;
 }
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
       `https://www.googleapis.com/books/v1/volumes?q=${searchText}&startIndex=${activePage*maxResults}&maxResults=${maxResults}`
     ).then((data) => {
       setIsLoading(false);
+      data.maxResults = maxResults;
       setBooks(data);
     });
     
@@ -73,7 +75,7 @@ export default function Home() {
           />
         </Card>
       </div>
-      {books && books?.items.length ? <Books booksObj={books} pageState={[activePage, setPage]} /> : <></>}
+      {books && books?.items?.length ? <Books booksObj={books} pageState={[activePage, setPage]} isLoading={isLoading} /> : <></>}
     </>
   );
 }
