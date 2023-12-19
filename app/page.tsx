@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import NextImage from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDebounce } from "./hooks/debounce";
 import Books from "./components/books";
 import basicfetch from "./utils/basicfetch";
@@ -30,6 +30,7 @@ export default function Home() {
   const [activePage, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const maxResults = 10
+  const targetRef = useRef<HTMLDivElement>(null);
 
   async function getBooks(searchText: string, activePage: number) {
     await basicfetch(
@@ -38,6 +39,14 @@ export default function Home() {
       setIsLoading(false);
       data.maxResults = maxResults;
       setBooks(data);
+      setTimeout(() => {
+        if(targetRef.current){
+          targetRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          })
+        }
+      }, 25)
     });
     
   }
@@ -75,7 +84,7 @@ export default function Home() {
           />
         </Card>
       </div>
-      {books && books?.items?.length ? <Books booksObj={books} pageState={[activePage, setPage]} isLoading={isLoading} /> : <></>}
+      {books && books?.items?.length ? <Books targetRef={targetRef} booksObj={books} pageState={[activePage, setPage]} isLoading={isLoading} /> : <></>}
     </>
   );
 }

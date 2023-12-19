@@ -34,11 +34,11 @@ const BookCardSkeleteon: React.FC<{isLoading: boolean;}> = ({isLoading}) => {
     )
 }
 
-const Books: React.FC<{booksObj : BooksInterface; pageState: any[]; isLoading: boolean;}> = ({booksObj, pageState, isLoading}) => {
+const Books: React.FC<{targetRef: React.RefObject<HTMLDivElement>;booksObj : BooksInterface; pageState: any[]; isLoading: boolean;}> = ({targetRef, booksObj, pageState, isLoading}) => {
     const {items, kind, totalItems, maxResults} = booksObj
     const [activePage, setPage] = pageState
 
-    return (
+    return <div ref={targetRef}> {
         isLoading ? <><div className='flex flex-wrap gap-6 mx-4'>
             {
                 Array.from({length: maxResults}).map((_, index) => {
@@ -77,10 +77,10 @@ const Books: React.FC<{booksObj : BooksInterface; pageState: any[]; isLoading: b
                     })
                 }
             </div>
-            <Pagination total={Math.floor((totalItems)/maxResults)} value={activePage} onChange={setPage} siblings={2} className='m-4 flex justify-end'/>
+            <Pagination total={Math.floor((totalItems)/maxResults) > 20 ? 20 : Math.floor((totalItems)/maxResults)} value={activePage} onChange={setPage} siblings={2} className='m-4 flex justify-end'/>
             <br/>
         </>
-    )
+    }</div>
 }
 
 export default Books
